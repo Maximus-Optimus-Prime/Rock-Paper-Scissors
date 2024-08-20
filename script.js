@@ -1,35 +1,55 @@
-function getComputerChoice(liste) {
-    return liste[Math.floor(Math.random() * liste.length)]
-}
-
-function getHumanChoice(liste) {
-    return prompt("Choose one among : rock - paper - scissors")
+const values = ["Rock", "Paper", "Scissors"];
+let comScore = 0, humScore = 0;
+const humanDiv = document.querySelector(".humanScore");
+const computerDiv = document.querySelector(".computerScore");
+const dialog = document.querySelector(".dialog");
+function getComputerChoice() {
+    return values[Math.floor(Math.random() * values.length)]
 }
 
 function playRound(hC, cC) {
-    hC = hC.toLowerCase();
-    if (values.indexOf(hC) + 1 === values.indexOf(cC) || values.indexOf(hC) -2 === values.indexOf(cC)) {
-        console.log(`You lose! ${cC} beats ${hC}`);
-        computerScore++;
+    if (values.indexOf(hC) + 1 === values.indexOf(cC) || values.indexOf(hC) - 2 === values.indexOf(cC)) {
+        dialog.textContent = `You lose! ${cC} beats ${hC}`;
+        comScore++;
     }
     else if (values.indexOf(hC) === values.indexOf(cC)) {
-        console.log(`equality! ${hC} equals ${cC}`);
+        dialog.textContent = `equality! ${hC} equals ${cC}`;
     }
     else {
-        console.log(`You win! ${hC} beats ${cC}`);
-        humanScore++;
+        dialog.textContent = `You win! ${hC} beats ${cC}`;
+        humScore++;
+    }
+    computerDiv.textContent = comScore;
+    humanDiv.textContent = humScore;
+    if (comScore >= 5 || humScore >= 5) {
+        playGame();
     }
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i++) {
-        let computerChoice = getComputerChoice(values);
-        let humanChoice = getHumanChoice(values);
-        playRound(humanChoice, computerChoice);
-    }
-    console.log(`Your score : ${humanScore} | Computer : ${computerScore}`);
-}   
+function resetValue() {
+    comScore = 0;
+    humScore = 0;
+    computerDiv.textContent = comScore;
+    humanDiv.textContent = humScore;
+    dialog.textContent = " ";
+}
 
-const values = ["rock", "paper", "scissors"];
-let computerScore = 0, humanScore = 0;
-playGame()
+function playGame() {
+    if (comScore > humScore) {
+        alert("You lose...");
+    } 
+    else {
+        alert("You win!");
+    }
+    resetValue();
+}
+
+window.onload = resetValue;
+const buttons = document.querySelectorAll("#btn");
+buttons.forEach(button => {
+    button.addEventListener("click", () => {
+        playRound(button.textContent, getComputerChoice());
+    });
+});
+const resetButton = document.querySelector("#reset");
+resetButton.addEventListener("click", resetValue);
